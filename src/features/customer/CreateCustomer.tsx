@@ -1,14 +1,19 @@
 import { useState } from "react";
+// to consume the state from redux store that is been passed as a props
+import { useSelector } from "react-redux";
+import type { RootState } from "../../store";
 
 function Customer() {
   const [fullName, setFullName] = useState("");
   const [nationalId, setNationalId] = useState("");
+  const customer = useSelector((store: RootState) => store.account.balance);
 
   function handleClick() {}
 
   return (
     <div>
       <h2>Create new customer</h2>
+      {customer}
       <div className="inputs">
         <div>
           <label>Customer full name</label>

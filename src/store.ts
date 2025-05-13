@@ -1,57 +1,21 @@
-import { createStore } from "redux";
+import { createStore, combineReducers } from "redux";
+import accountReducer from "./features/account/accountSlice";
 
-type initialStateTypes = {
-  loan: number;
-  balance: number;
-  loanPurpose: string;
-};
+// return the type of the account Reducer function
+// type AccountState = ReturnType<typeof accountReducer>;
 
-type Action =
-  | { type: "account/deposit"; payload: number }
-  | { type: "account/withdraw"; payload: number }
-  | { type: "account/requestLoan"; payload: number }
-  | { type: "account/payLoan" };
+// type CombineReducerProps = {
+//   account: AccountState;
+// };
 
-const initialState: initialStateTypes = {
-  loan: 0,
-  balance: 0,
-  loanPurpose: "",
-};
+const combineReducer = combineReducers({
+  account: accountReducer,
+});
 
-function reducer(state = initialState, action: Action) {
-  switch (action.type) {
-    case "account/deposit":
-      return {
-        ...state,
-        balance: state.balance + action.payload,
-      };
-    case "account/withdraw":
-      return {
-        ...state,
-        balance: state.balance - action.payload,
-      };
-    case "account/requestLoan":
-      if (state.loan > 0) return state;
-      return {
-        ...state,
-        loan: action.payload,
-      };
-    case "account/payLoan":
-      return {
-        ...state,
-        loan: 0,
-        loanPurpose: "",
-        balance: state.balance - state.loan,
-      };
-    default:
-      return state;
-  }
-}
+const store = createStore(combineReducer);
+export default store;
 
-// create our store in react
-const store = createStore(reducer);
-// from this store, we can dispatch actions
-store.dispatch(deposit(500));
+export type RootState = ReturnType<typeof combineReducer>;
 
 // Action creators
 function deposit(amount: number): Action {
